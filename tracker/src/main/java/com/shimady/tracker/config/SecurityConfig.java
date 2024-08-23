@@ -42,15 +42,15 @@ public class SecurityConfig {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/user/signup").permitAll();
+                    auth.requestMatchers("/users/signup").permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(form -> {
-                    form.loginPage("/user/login");
-                    form.defaultSuccessUrl("/user/me");
+                    form.loginPage("/users/login");
+                    form.defaultSuccessUrl("/users/me");
                     form.failureHandler(authenticationFailureHandler());
                 })
-                .logout(logout -> logout.logoutUrl("/user/logout"))
+                .logout(logout -> logout.logoutUrl("/users/logout"))
                 .build();
     }
 }
