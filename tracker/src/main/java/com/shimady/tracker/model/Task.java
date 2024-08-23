@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Task {
     @Id
-    @GeneratedValue
+    @GeneratedValue(generator = "task_id_seq")
     public Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
