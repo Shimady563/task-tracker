@@ -23,7 +23,7 @@ public class Task {
     public String description;
 
     @Enumerated(EnumType.STRING)
-    public TaskStatus status;
+    public TaskStatus status = TaskStatus.TODO;
 
     public LocalDateTime createdAt;
 
