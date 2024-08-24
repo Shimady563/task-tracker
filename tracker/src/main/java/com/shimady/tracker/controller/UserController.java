@@ -34,4 +34,10 @@ public class UserController {
         userService.createUser(request);
     }
 
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void update(@PathVariable Long id, @RequestBody UserDTO request) {
+        userService.updateUser(id, request);
+    }
 }
