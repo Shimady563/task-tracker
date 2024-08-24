@@ -36,7 +36,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 
         AppError error = new AppError(
                 exception.getMessage(),
-                HttpStatus.UNAUTHORIZED.toString(),
+                HttpStatus.UNAUTHORIZED.value(),
                 LocalDateTime.now()
         );
 
