@@ -60,6 +60,8 @@ public class TaskService {
                 .getAuthentication()
                 .getPrincipal();
 
+        log.info("Retrieving task for user with id {}", user.getId());
+
         Slice<Task> tasks = taskRepository.findAllByUser(
                 user,
                 PageRequest.of(offset, limit, sort.getSortValue())
@@ -69,6 +71,7 @@ public class TaskService {
     }
 
     private Task getTaskById(Long id) {
+        log.info("Retrieving task with id {}", id);
         return taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
     }
