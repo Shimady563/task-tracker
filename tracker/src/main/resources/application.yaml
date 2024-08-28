@@ -10,6 +10,12 @@ spring:
         format_sql: true
   liquibase:
     change-log: classpath:/db/changelog/db-changelog-master.xml
+  kafka:
+    bootstrap-servers: kafka:29093
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 logging:
   level:
     root: info
+
