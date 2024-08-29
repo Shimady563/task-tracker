@@ -1,4 +1,4 @@
-package com.shimady.tracker.model.dto.messaging;
+package com.shimady.tracker.model.messaging;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class EmailMessage {
-    private String username;
-    private String email;
+    private final String username;
+    private final String email;
 }

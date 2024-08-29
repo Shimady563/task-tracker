@@ -1,4 +1,4 @@
-package com.shimady.tracker.model.dto.messaging;
+package com.shimady.tracker.model.messaging;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,6 +8,6 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class SMSMessage {
-    private String username;
-    private String phoneNumber;
+    private final String username;
+    private final String phoneNumber;
 }
