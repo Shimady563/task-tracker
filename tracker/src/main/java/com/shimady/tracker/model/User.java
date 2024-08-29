@@ -27,6 +27,9 @@ public class User implements UserDetails {
 
     private String phoneNumber;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Task> tasks;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority("USER"));
