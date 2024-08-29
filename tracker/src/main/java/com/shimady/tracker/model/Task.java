@@ -11,6 +11,11 @@ import java.time.LocalDateTime;
 @Entity
 public class Task {
     @Id
+    @SequenceGenerator(
+            name = "task_id_seq",
+            sequenceName = "task_id_seq",
+            allocationSize = 1
+    )
     @GeneratedValue(generator = "task_id_seq")
     public Long id;
 

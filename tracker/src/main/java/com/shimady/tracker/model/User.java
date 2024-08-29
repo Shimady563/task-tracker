@@ -16,6 +16,11 @@ import java.util.List;
 @Table(name = "tracker_user")
 public class User implements UserDetails {
     @Id
+    @SequenceGenerator(
+            name = "tracker_user_id_seq",
+            sequenceName = "tracker_user_id_seq",
+            allocationSize = 1
+    )
     @GeneratedValue(generator = "tracker_user_id_seq")
     private Long id;
 
