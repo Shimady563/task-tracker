@@ -31,4 +31,12 @@ public class KafkaTopic {
                 .replicas(1)
                 .build();
     }
+
+    @Bean
+    public NewTopic reminderTopic() {
+        return TopicBuilder.name("reminderTopic")
+                .partitions(4)
+                .replicas(1)
+                .build();
+    }
 }
