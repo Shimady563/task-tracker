@@ -33,8 +33,6 @@ public class MessagingScheduler {
             Map<TaskStatus, Integer> tasksByStatus = user.getTasks().stream()
                     .collect(Collectors.groupingBy(Task::getStatus, Collectors.summingInt(task -> 1)));
 
-            log.info(String.valueOf(tasksByStatus));
-
             ReminderMessage reminderMessage = new ReminderMessage(user.getUsername(), user.getEmail(), tasksByStatus);
 
             kafkaTemplate.send("reminderTopic", reminderMessage);
