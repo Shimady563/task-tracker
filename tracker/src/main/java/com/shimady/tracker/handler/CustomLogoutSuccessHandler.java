@@ -1,4 +1,4 @@
-package com.shimady.tracker.config;
+package com.shimady.tracker.handler;
 
 import com.shimady.tracker.model.User;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.shimady.tracker.config;
+package com.shimady.tracker.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;

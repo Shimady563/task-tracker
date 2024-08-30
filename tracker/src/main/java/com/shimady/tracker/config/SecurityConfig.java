@@ -1,5 +1,7 @@
 package com.shimady.tracker.config;
 
+import com.shimady.tracker.handler.CustomAuthenticationFailureHandler;
+import com.shimady.tracker.handler.CustomLogoutSuccessHandler;
 import com.shimady.tracker.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -15,7 +17,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.validation.annotation.Validated;
 
 @Configuration
 public class SecurityConfig {
