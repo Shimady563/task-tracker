@@ -2,6 +2,8 @@ package com.shimady.tracker.config;
 
 import com.shimady.tracker.repository.UserRepository;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,9 +14,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.validation.annotation.Validated;
 
 @Configuration
 public class SecurityConfig {
+
+    private static final Logger log = LoggerFactory.getLogger(SecurityConfig.class);
 
     @Bean
     public ModelMapper modelMapper() {
@@ -30,6 +36,11 @@ public class SecurityConfig {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new CustomAuthenticationFailureHandler();
+    }
+
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return new CustomLogoutSuccessHandler();
     }
 
     @Bean
@@ -50,7 +61,10 @@ public class SecurityConfig {
                     form.defaultSuccessUrl("/users/me");
                     form.failureHandler(authenticationFailureHandler());
                 })
-                .logout(logout -> logout.logoutUrl("/users/logout"))
+                .logout(logout -> {
+                    logout.logoutUrl("/users/logout");
+                    logout.logoutSuccessHandler(logoutSuccessHandler());
+                })
                 .build();
     }
 }
