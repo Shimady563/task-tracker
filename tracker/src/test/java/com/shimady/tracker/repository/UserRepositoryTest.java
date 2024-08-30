@@ -67,7 +67,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testFindById() {
+    public void shouldFindUserById() {
         Optional<User> foundUser = userRepository.findById(user1.getId());
 
         assertThat(foundUser).isPresent();
@@ -75,7 +75,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testSave() {
+    public void shouldSaveUser() {
         User newUser = new User();
         newUser.setUsername("Bob Smith");
         newUser.setEmail("bob.smith@example.com");
@@ -90,7 +90,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testFindByEmail() {
+    public void shouldFindUserByEmail() {
         Optional<User> foundUser = userRepository.findByEmail(user1.getEmail());
 
         assertThat(foundUser).isPresent();
@@ -98,7 +98,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void testFindAllFetchTasks() {
+    public void shouldFindAllUsersAndFetchTasks() {
         List<User> users = userRepository.findAllFetchTasks();
 
         assertThat(users)
@@ -115,4 +115,3 @@ public class UserRepositoryTest {
                 );
     }
 }
-

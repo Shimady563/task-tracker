@@ -33,7 +33,7 @@ public class TaskRepositoryTest {
     private Task task1;
 
     @BeforeEach
-    public void setup() {
+    public void setUp() {
         user = new User();
         user.setUsername("Test User");
         user.setPassword("Password");
@@ -72,14 +72,14 @@ public class TaskRepositoryTest {
     }
 
     @Test
-    public void testFindById() {
+    public void shouldFindTaskById() {
         Optional<Task> foundTask = taskRepository.findById(task1.getId());
         assertThat(foundTask).isPresent();
         assertThat(foundTask.get().getTitle()).isEqualTo(task1.getTitle());
     }
 
     @Test
-    public void testSave() {
+    public void shouldSaveTask() {
         Task newTask = new Task();
         newTask.setUser(user);
         newTask.setStatus(TaskStatus.TODO);
@@ -96,7 +96,7 @@ public class TaskRepositoryTest {
     }
 
     @Test
-    public void testFindAllByUser_FirstPage() {
+    public void shouldReturnFirstPageOfUserTasksWhenOffsetIs0() {
         Pageable pageable = PageRequest.of(0, 2);
         Slice<Task> tasks = taskRepository.findAllByUser(user, pageable);
 
@@ -106,7 +106,7 @@ public class TaskRepositoryTest {
     }
 
     @Test
-    public void testFindAllByUser_SecondPage() {
+    public void shouldReturnSecondPageOfUserTasksWhenOffsetIs1() {
         Pageable pageable = PageRequest.of(1, 2);
         Slice<Task> tasks = taskRepository.findAllByUser(user, pageable);
 
@@ -115,7 +115,7 @@ public class TaskRepositoryTest {
     }
 
     @Test
-    public void testFindAllByUser_EmptySlice() {
+    public void shouldReturnEmptySliceOfTasksWhenUserHasNoTasks() {
         User newUser = new User();
         newUser.setUsername("New User");
         newUser.setPassword("Password");
@@ -129,7 +129,7 @@ public class TaskRepositoryTest {
     }
 
     @Test
-    public void testCountByUserAndStatus() {
+    public void shouldReturnNumberOfTasksForUserWithSpecifiedStatus() {
         long inProgressTaskCount = taskRepository.countByUserAndStatus(user, TaskStatus.TODO);
         assertThat(inProgressTaskCount).isEqualTo(2);
     }
