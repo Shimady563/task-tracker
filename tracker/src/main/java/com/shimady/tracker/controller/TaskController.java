@@ -24,6 +24,7 @@ public class TaskController {
     }
 
     @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void updateTask(@PathVariable Long id, @RequestBody TaskUpdateRequest request) {
         taskService.updateTask(id, request);
     }
