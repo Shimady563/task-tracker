@@ -1,8 +1,6 @@
 package com.shimady.tracker.model.dto;
 
 import com.shimady.tracker.model.TaskStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

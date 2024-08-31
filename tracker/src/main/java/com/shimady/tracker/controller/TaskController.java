@@ -5,6 +5,7 @@ import com.shimady.tracker.model.dto.TaskResponse;
 import com.shimady.tracker.model.dto.TaskUpdateRequest;
 import com.shimady.tracker.model.sort.TaskSort;
 import com.shimady.tracker.service.TaskService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.http.HttpStatus;
@@ -19,13 +20,13 @@ public class TaskController {
 
     @PostMapping("")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createTask(@RequestBody TaskCreationRequest request) {
+    public void createTask(@Valid @RequestBody TaskCreationRequest request) {
         taskService.createTask(request);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateTask(@PathVariable Long id, @RequestBody TaskUpdateRequest request) {
+    public void updateTask(@PathVariable Long id, @Valid @RequestBody TaskUpdateRequest request) {
         taskService.updateTask(id, request);
     }
 

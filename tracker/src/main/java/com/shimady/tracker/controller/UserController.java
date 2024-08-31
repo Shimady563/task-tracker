@@ -3,6 +3,7 @@ package com.shimady.tracker.controller;
 import com.shimady.tracker.model.dto.UserDTO;
 import com.shimady.tracker.model.dto.UserInfo;
 import com.shimady.tracker.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -30,14 +31,14 @@ public class UserController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public void signUp(@RequestBody UserDTO request) {
+    public void signUp(@Valid @RequestBody UserDTO request) {
         userService.createUser(request);
     }
 
 
     @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void update(@PathVariable Long id, @RequestBody UserDTO request) {
+    public void update(@PathVariable Long id, @Valid @RequestBody UserDTO request) {
         userService.updateUser(id, request);
     }
 }
