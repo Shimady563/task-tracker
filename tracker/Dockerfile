@@ -1,6 +1,6 @@
 FROM bellsoft/liberica-runtime-container:jre-21-cds-slim-glibc as builder
 WORKDIR /builder
-ARG JAR_FILE=/build/libs/tracker-0.0.1.jar
+ARG JAR_FILE=/build/libs/tracker-0.5.0.jar
 COPY ${JAR_FILE} application.jar
 RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
 
