@@ -27,5 +27,5 @@ jobs:
       with:
          context: ./tracker
          file: ./tracker/build.Dockerfile
-         pus: true
+         push: true
          tags: ${{ secrets.DOCKERHUB_USERNAME }}/tracker:latest
