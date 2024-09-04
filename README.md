@@ -46,6 +46,7 @@ docker compose -f ./production-comose.yaml down
 - Security is handled by Spring Security
 - Communication between services is done with Kafka
 - Application is built and deployed with Docker
+- DB schema migration is handled with Liquibase
 
 The validation, error handling, testing are implemented using Spring Boot features.
 
