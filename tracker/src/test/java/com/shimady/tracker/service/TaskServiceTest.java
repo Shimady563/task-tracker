@@ -1,8 +1,10 @@
 package com.shimady.tracker.service;
 
+import com.shimady.tracker.exception.AccessDeniedException;
 import com.shimady.tracker.model.Task;
 import com.shimady.tracker.model.User;
 import com.shimady.tracker.model.dto.TaskCreationRequest;
+import com.shimady.tracker.model.dto.TaskUpdateRequest;
 import com.shimady.tracker.repository.TaskRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +21,9 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -70,6 +74,43 @@ public class TaskServiceTest {
         taskService.createTask(request);
 
         then(taskRepository).should().save(eq(task));
+    }
 
+    @Test
+    public void shouldUpdateTask() {
+        TaskUpdateRequest request = new TaskUpdateRequest();
+        Task task = new Task();
+        task.setId(1L);
+        User user = new User();
+        user.setId(1L);
+        user.setTasks(List.of(task));
+        task.setUser(user);
+
+        given(securityContext.getAuthentication())
+                .willReturn(new UsernamePasswordAuthenticationToken(user, null));
+        given(taskRepository.findById(eq(task.getId()))).willReturn(Optional.of(task));
+
+        taskService.updateTask(task.getId(), request);
+
+        then(taskRepository).should().save(eq(task));
+    }
+
+    @Test
+    public void shouldThrowAccessDeniedExceptionWhenIdsDoesNotMatchInUpdateTask() {
+        TaskUpdateRequest request = new TaskUpdateRequest();
+        Task task = new Task();
+        task.setId(1L);
+        User user1 = new User();
+        user1.setId(1L);
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setTasks(List.of(task));
+        task.setUser(user2);
+
+        given(securityContext.getAuthentication())
+                .willReturn(new UsernamePasswordAuthenticationToken(user1, null));
+        given(taskRepository.findById(eq(task.getId()))).willReturn(Optional.of(task));
+
+        assertThrows(AccessDeniedException.class, () -> taskService.updateTask(task.getId(), request));
     }
 }

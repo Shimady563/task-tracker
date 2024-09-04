@@ -17,20 +17,20 @@ public class Task {
             allocationSize = 1
     )
     @GeneratedValue(generator = "task_id_seq")
-    public Long id;
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    public User user;
+    private User user;
 
-    public String title;
+    private String title;
 
-    public String description;
+    private String description;
 
     @Enumerated(EnumType.STRING)
-    public TaskStatus status = TaskStatus.TODO;
+    private TaskStatus status = TaskStatus.TODO;
 
-    public LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
-    public LocalDateTime deadline;
+    private LocalDateTime deadline;
 }

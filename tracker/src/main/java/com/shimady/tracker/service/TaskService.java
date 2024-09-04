@@ -1,5 +1,6 @@
 package com.shimady.tracker.service;
 
+import com.shimady.tracker.exception.AccessDeniedException;
 import com.shimady.tracker.exception.ResourceNotFoundException;
 import com.shimady.tracker.model.Task;
 import com.shimady.tracker.model.User;
@@ -44,6 +45,14 @@ public class TaskService {
         log.info("Updating task with id {}", id);
 
         Task task = getTaskById(id);
+        User user = (User) SecurityContextHolder
+                .getContext()
+                .getAuthentication().getPrincipal();
+
+        // try task in user.tasks
+        if (!user.getId().equals(task.getUser().getId())) {
+            throw new AccessDeniedException("Access denied for task update request, task id " + id);
+        }
 
         task.setTitle(request.getTitle());
         task.setDescription(request.getDescription());
