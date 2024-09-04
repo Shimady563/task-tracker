@@ -5,7 +5,7 @@ RUN gradle bootJar -x test
 
 FROM bellsoft/liberica-runtime-container:jre-21-cds-slim-glibc as optimizer
 WORKDIR /optimizer
-ARG JAR_FILE=/builder/build/libs/tracker-0.0.1.jar
+ARG JAR_FILE=/builder/build/libs/tracker-*.jar
 COPY --from=builder ${JAR_FILE} application.jar
 RUN java -Djarmode=tools -jar application.jar extract --layers --destination extracted
 
