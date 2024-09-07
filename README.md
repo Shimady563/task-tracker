@@ -30,13 +30,13 @@ git clone https://github.com/Shimady563/task-tracker.git
 Go to the cloned project directory and run the application
 
 ```bash
-docker compose -f ./production-comose.yaml up  -d
+docker compose -f ./production-compose.yaml up  -d
 ```
 
 To stop the application run
 
 ```bash
-docker compose -f ./production-comose.yaml down
+docker compose -f ./production-compose.yaml down
 ```
 
 ## Technologies used
