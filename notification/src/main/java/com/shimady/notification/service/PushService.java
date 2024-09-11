@@ -14,7 +14,7 @@ public class PushService {
     private final SimpMessagingTemplate template;
 
     public void sendPush(PushMessage message) {
-        log.info("Sending push notification to the browser, username {}", message.getUsername());
+        log.info("Sending push notification to the browser, username: {}", message.getUsername());
 
         String text = """
                   Welcome, %s,
