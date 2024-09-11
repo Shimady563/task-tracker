@@ -34,8 +34,7 @@ public class EmailService {
         text.append("""
                   Hello  %s,
                   "This is a reminder of your tasks for today.
-                  You have %d %o tasks, $d %o tasks and %d %o tasks due today.
-                """);
+                """.formatted(message.getUsername()));
 
         for (TaskStatus status : message.getTasksByStatus().keySet()) {
             text.append(message.getTasksByStatus().get(status))
