@@ -24,7 +24,7 @@ public class EmailService {
         mailMessage.setSubject("Welcome to the Notification Service");
         mailMessage.setText("Hello " + message.getUsername() + ",\n\nWelcome to the Task Tracker!");
 
-        mailSender.send(new SimpleMailMessage());
+        mailSender.send(mailMessage);
     }
 
     public void sendReminderEmail(ReminderMessage message) {
@@ -52,6 +52,6 @@ public class EmailService {
         mailMessage.setSubject("Reminder: Task is due soon");
         mailMessage.setText(text.toString());
 
-        mailSender.send(new SimpleMailMessage());
+        mailSender.send(mailMessage);
     }
 }
