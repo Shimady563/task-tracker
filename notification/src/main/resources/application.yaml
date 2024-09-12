@@ -1,3 +1,30 @@
 spring:
   application:
     name: notification
+  kafka:
+    bootstrap-servers: kafka:29093
+    consumer:
+      group-id: notification
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: "com.shimady.tracker.model.messaging"
+            type:
+              mapping: com.shimady.tracker.model.messaging.EmailMessage:com.shimady.notification.model.EmailMessage,
+                com.shimady.tracker.model.messaging.PushMessage:com.shimady.notification.model.PushMessage,
+                com.shimady.tracker.model.messaging.ReminderMessage:com.shimady.notification.model.ReminderMessage,
+                com.shimady.tracker.model.messaging.SMSMessage:com.shimady.notification.model.SMSMessage
+  mail:
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+logging:
+  level:
+    root: info

@@ -16,11 +16,19 @@ services:
       kafka:
         condition: service_started
 
+  # 8040 port mapping for websocket connection
   notification:
     container_name: notification
     build:
       context: ./notification
       dockerfile: ./Dockerfile
+    ports:
+      - "8040:8080"
+    environment:
+      - SPRING_MAIL_USERNAME=${MAIL_USERNAME}
+      - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
+      - SPRING_MAIL_HOST=${MAIL_HOST}
+      - SPRING_MAIL_PORT=${MAIL_PORT}
     depends_on:
       tracker:
         condition: service_started
