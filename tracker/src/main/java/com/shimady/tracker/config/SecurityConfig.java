@@ -19,16 +19,12 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 @Configuration
 public class SecurityConfig {
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(UserRepository userRepository) {
-        return (email) -> userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
-    }
+    private final String[] AUTH_WHITELIST_PATHS = new String[]{
+            "/users/signup",
+            "/swagger-ui.html",
+            "/v3/api-docs/**",
+            "/swagger-ui/**"
+    };
 
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
@@ -41,16 +37,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> {
-                    auth.requestMatchers("/users/signup").permitAll();
+                    auth.requestMatchers(AUTH_WHITELIST_PATHS).permitAll();
                     auth.anyRequest().authenticated();
                 })
                 .formLogin(form -> {
@@ -63,5 +54,21 @@ public class SecurityConfig {
                     logout.logoutSuccessHandler(logoutSuccessHandler());
                 })
                 .build();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return (email) -> userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User with email " + email + " not found"));
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }
