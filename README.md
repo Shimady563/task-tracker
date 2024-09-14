@@ -97,8 +97,6 @@ You can view documentation at
 
 http://localhost:8080/swagger-ui/index.html
 
-**Note: **
-
 Additionally, you can view the documentation in Postman format at
 
 https://documenter.getpostman.com/view/33505917/2sAXjM2r3y
