@@ -7,6 +7,7 @@ import com.shimady.tracker.model.sort.TaskSort;
 import com.shimady.tracker.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Tag(name = "Task Controller", description = "Controller for manipulating user tasks")
+@SecurityRequirement(name = "SessionAuth")
 public class TaskController {
 
     private final TaskService taskService;
@@ -33,7 +35,7 @@ public class TaskController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @Operation(summary = "Update current user task by id")
     public void updateTask(
-            @PathVariable @Parameter(description = "Id of the task being updated") Long id,
+            @PathVariable @Parameter(description = "Id of the task being updated", example = "1") Long id,
             @Valid @RequestBody TaskUpdateRequest request
     ) {
         taskService.updateTask(id, request);
