@@ -64,7 +64,8 @@ docker compose -f ./production-compose.yaml down
 - Application is built and deployed with Docker
 - DB schema migration is handled with Liquibase
 
-The validation, error handling, testing are implemented using Spring Boot features.
+The validation, error handling, testing, mailing are implemented using Spring Boot features.
+Notification types include email, sms, and push notifications.
 
 ## Architecture
 
@@ -74,16 +75,12 @@ and notification service which is responsible for sending notifications to users
 The services communicate with each other using Kafka.
 It is easy to add functionality to the application by 
 adding new services due to high modularity of architecture.
-At the moment the tracker service is fully completed 
-and notification service under development.
 
 ## Future plans
 
-Now that the first version of the application is completed, 
-I'm working on the notification service. 
-After all the services are completed,
-I plan to add swagger documentation and 
-configure kubernetes to operate the application 
+Now first version of the application is completed,
+and it has every feature that was planned.
+I plan to add k8s cluster configuration
 for easy scalable deployment.
 
 ## API description
