@@ -1,13 +1,15 @@
 services:
   tracker:
     container_name: tracker
-    image: shimady563/tracker:latest
+    build:
+      context: ./tracker
+      dockerfile: ./Dockerfile
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/tracker
-      - SPRING_DATASOURCE_PASSWORD=postgres
-      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
+      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
     depends_on:
       postgres:
         condition: service_healthy
@@ -17,7 +19,9 @@ services:
   # 8040 port mapping for websocket connection
   notification:
     container_name: notification
-    image: shimady563/notification:latest
+    build:
+      context: ./notification
+      dockerfile: ./Dockerfile
     ports:
       - "8040:8080"
     environment:
@@ -33,12 +37,12 @@ services:
     container_name: postgres
     image: postgres:alpine
     restart: always
-    user: postgres
+    user: ${POSTGRES_USER}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=tracker
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     expose:
       - 5432
     healthcheck:

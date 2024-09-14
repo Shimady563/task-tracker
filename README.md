@@ -27,11 +27,27 @@ Next, clone repository to your local machine
 git clone https://github.com/Shimady563/task-tracker.git
 ```
 
-Go to the cloned project directory and run the application
+Go to the cloned project directory and create .evn file 
+for email server configuration (you can use mailtrap.io)
+
+Examaple of .env file
+
+```bash
+MAIL_USERNAME=<your_username>
+MAIL_PASSWORD=<your_password>
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+```
+
+Then you can run the application
 
 ```bash
 docker compose -f ./production-compose.yaml up  -d
 ```
+
+You can view documentation at http://localhost:8080/swagger-ui/index.html
+
+Kafka ui is available at http://localhost:8090
 
 To stop the application run
 
@@ -72,10 +88,15 @@ for easy scalable deployment.
 
 ## API description
 
-For now, before swagger documentation is added, 
-I'm adding this postman API documentation instead.
+**Note: before you access any of the endpoints,
+you should create an account and login into it. 
+In swagger docs use login endpoint to login into account
+instead of swagger's default login**
 
-**Note: before you access any of the endpoints, 
-you should create an account and login into it**
+You can view documentation at 
+
+http://localhost:8080/swagger-ui/index.html
+
+Additionally, you can view the documentation in Postman format at
 
 https://documenter.getpostman.com/view/33505917/2sAXjM2r3y

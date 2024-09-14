@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class PushMessage {
     private final String username;
-    private final long tasksToDo;
+    private final Long tasksToDo;
 }
