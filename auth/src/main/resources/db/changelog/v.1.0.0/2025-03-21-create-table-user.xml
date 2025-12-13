@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="2025-03-21-create-table-user" author="Shimady">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="contest_user"/>
+            </not>
+        </preConditions>
+
+        <createSequence sequenceName="user_id_seq"/>
+
+        <createTable tableName="contest_user">
+            <column name="id" type="bigserial" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role" type="varchar">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="2025-06-01-add-role-check-constraint" author="Shimady">
+        <sql>
+            alter table contest_user
+            add constraint contest_user_role_check
+            check (role in ('ROLE_STUDENT', 'ROLE_TEACHER'));
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

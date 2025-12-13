@@ -1,0 +1,63 @@
+plugins {
+    id "org.springframework.boot" version "${springbootVersion}" apply false
+    id "io.spring.dependency-management" version "${springDependencyManagementVersion}" apply false
+}
+
+allprojects {
+    group = project.group
+    version = project.version
+}
+
+subprojects {
+    apply plugin: "java"
+    apply plugin: "org.springframework.boot"
+    apply plugin: "io.spring.dependency-management"
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
+
+    configurations {
+        compileOnly {
+            extendsFrom annotationProcessor
+        }
+    }
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+        implementation "org.springframework.boot:spring-boot-starter-validation"
+        implementation "org.springframework.boot:spring-boot-starter-web"
+        implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+        compileOnly "org.projectlombok:lombok"
+        runtimeOnly "org.postgresql:postgresql"
+        annotationProcessor "org.projectlombok:lombok"
+        annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+        testImplementation "org.springframework.boot:spring-boot-starter-test"
+        testImplementation "org.springframework.boot:spring-boot-testcontainers"
+        testImplementation "org.testcontainers:junit-jupiter"
+        testImplementation "org.testcontainers:postgresql"
+        testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+        testCompileOnly "org.projectlombok:lombok"
+        testAnnotationProcessor "org.projectlombok:lombok"
+    }
+
+    test {
+        useJUnitPlatform()
+
+        testLogging {
+            events "passed", "skipped", "failed"
+
+            showExceptions = true
+            exceptionFormat = "full"
+            showCauses = true
+            showStackTraces = true
+            showStandardStreams = false
+        }
+    }
+}

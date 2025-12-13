@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: AuthService
+  datasource:
+    driver-class-name: org.postgresql.Driver
+
+auth:
+  whitelist: /signup, /login, /refresh, /logout, /swagger-ui.html, /v3/api-docs/**, /swagger-ui/**
+  allowed-origins: http://localhost:5173
+
+server:
+  servlet:
+    context-path: /api/v1/auth
+
+logging:
+  level:
+    root: info

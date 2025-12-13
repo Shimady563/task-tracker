@@ -1,0 +1,9 @@
+dependencies {
+	implementation "org.springframework.boot:spring-boot-starter-data-redis"
+	implementation "org.springframework.boot:spring-boot-starter-security"
+	implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${project.springdocOpenapiStarterWebmvcUiVersion}"
+	implementation "io.jsonwebtoken:jjwt-api:${project.jsonWebTokenVersion}"
+	implementation "io.jsonwebtoken:jjwt-impl:${project.jsonWebTokenVersion}"
+	implementation "io.jsonwebtoken:jjwt-jackson:${project.jsonWebTokenVersion}"
+	testImplementation "org.springframework.security:spring-security-test"
+}
