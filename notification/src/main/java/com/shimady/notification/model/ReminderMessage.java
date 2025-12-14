@@ -20,5 +20,5 @@ public class ReminderMessage {
     private String email;
 
     @NotNull(message = "Tasks by status cannot be blank")
-    private Map<TaskStatus, Integer> tasksByStatus;
+    private Map<TaskStatus, Long> tasksByStatus;
 }

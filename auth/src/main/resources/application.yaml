@@ -3,6 +3,16 @@ spring:
     name: AuthService
   datasource:
     driver-class-name: org.postgresql.Driver
+  kafka:
+    producer:
+      client-id: ${spring.application.name}
+      enable-idempotence: true
+      acks: all
+      linger-ms: 100
+      retry-backoff-ms: 1000
+      delivery-timeout-ms: 30000
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
 
 auth:
   whitelist: /signup, /login, /refresh, /logout, /swagger-ui.html, /v3/api-docs/**, /swagger-ui/**
@@ -11,6 +21,21 @@ auth:
 server:
   servlet:
     context-path: /api/v1/auth
+
+kafka:
+  topics:
+    email:
+      name: emailTopic
+      replication-factor: 1
+      partitions: 1
+    sms:
+      name: smsTopic
+      replication-factor: 1
+      partitions: 1
+    push:
+      name: pushTopic
+      replication-factor: 1
+      partitions: 1
 
 logging:
   level:

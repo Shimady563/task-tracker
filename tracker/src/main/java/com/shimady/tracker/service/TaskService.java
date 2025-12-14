@@ -12,9 +12,8 @@ import com.shimady.tracker.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Slice;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,13 +24,11 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
     private final ModelMapper modelMapper;
+    private final UserService userService;
 
     @Transactional
     public void createTask(TaskCreationRequest request) {
-        User user = (User) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
+        User user = userService.getCurrentUser();
 
         log.info("Creating task for user with id {}", user.getId());
 
@@ -45,9 +42,7 @@ public class TaskService {
         log.info("Updating task with id {}", id);
 
         Task task = getTaskById(id);
-        User user = (User) SecurityContextHolder
-                .getContext()
-                .getAuthentication().getPrincipal();
+        User user = userService.getCurrentUser();
 
         // try task in user.tasks
         if (!user.getId().equals(task.getUser().getId())) {
@@ -63,15 +58,12 @@ public class TaskService {
     }
 
     @Transactional
-    public Slice<TaskResponse> getAllTasksByUser(int limit, int offset, TaskSort sort) {
-        User user = (User) SecurityContextHolder
-                .getContext()
-                .getAuthentication()
-                .getPrincipal();
+    public Page<TaskResponse> getAllTasksByUser(int limit, int offset, TaskSort sort) {
+        User user = userService.getCurrentUser();
 
         log.info("Retrieving task for user with id {}", user.getId());
 
-        Slice<Task> tasks = taskRepository.findAllByUser(
+        Page<Task> tasks = taskRepository.findAllByUser(
                 user,
                 PageRequest.of(offset, limit, sort.getSortValue())
         );
@@ -84,5 +76,4 @@ public class TaskService {
         return taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task with id " + id + " not found"));
     }
-
 }

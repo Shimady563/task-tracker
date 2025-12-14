@@ -2,6 +2,7 @@ package com.shimady.auth.repository;
 
 import com.shimady.auth.config.props.JwtProperties;
 import com.shimady.auth.model.User;
+import com.shimady.auth.model.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -43,7 +44,7 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .subject(user.getEmail())
-                .claim("role", user.getRole())
+                .claim("role", UserRole.ROLE_USER)
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(expiration))
                 .signWith(secret)

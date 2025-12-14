@@ -1,13 +1,14 @@
-package com.shimady.tracker.event;
+package com.shimady.auth.event;
 
-import com.shimady.tracker.exception.ResourceNotFoundException;
-import com.shimady.tracker.model.TaskStatus;
-import com.shimady.tracker.model.User;
-import com.shimady.tracker.model.messaging.EmailMessage;
-import com.shimady.tracker.model.messaging.PushMessage;
-import com.shimady.tracker.model.messaging.SMSMessage;
-import com.shimady.tracker.repository.TaskRepository;
-import com.shimady.tracker.repository.UserRepository;
+import com.shimady.auth.exception.ResourceNotFoundException;
+import com.shimady.auth.model.TaskStatus;
+import com.shimady.auth.model.User;
+import com.shimady.auth.model.UserCreationEvent;
+import com.shimady.auth.model.dto.EmailMessage;
+import com.shimady.auth.model.dto.PushMessage;
+import com.shimady.auth.model.dto.SMSMessage;
+import com.shimady.auth.repository.TaskRepository;
+import com.shimady.auth.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -31,7 +32,6 @@ public class MessagingEventListener {
     @TransactionalEventListener(value = UserCreationEvent.class, phase = TransactionPhase.AFTER_COMMIT)
     public void onUserCreationEvent(UserCreationEvent event) {
         log.info("Received user creation event, user id {}", event.getUserId());
-
         User user = userRepository.findById(event.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + event.getUserId() + " not found"));
         EmailMessage emailMessage = new EmailMessage(user.getUsername(), user.getEmail());
@@ -44,9 +44,10 @@ public class MessagingEventListener {
     @Async
     @EventListener(value = AuthenticationSuccessEvent.class)
     public void onAuthenticationSuccessEvent(AuthenticationSuccessEvent event) {
-        User user = (User) event.getAuthentication().getPrincipal();
-
-        log.info("Received authentication success event, email {}", user.getEmail());
+        String userEmail = (String) event.getAuthentication().getPrincipal();
+        log.info("Received authentication success event, email {}", userEmail);
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new ResourceNotFoundException("User with email " + userEmail + " not found"));
 
         long tasksToDo = taskRepository.countByUserAndStatus(user, TaskStatus.TODO);
         PushMessage pushMessage = new PushMessage(user.getUsername(), tasksToDo);

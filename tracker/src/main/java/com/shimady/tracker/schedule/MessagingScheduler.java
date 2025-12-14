@@ -30,8 +30,8 @@ public class MessagingScheduler {
         List<User> users = userRepository.findAllFetchTasks();
 
         for (User user : users) {
-            Map<TaskStatus, Integer> tasksByStatus = user.getTasks().stream()
-                    .collect(Collectors.groupingBy(Task::getStatus, Collectors.summingInt(task -> 1)));
+            Map<TaskStatus, Long> tasksByStatus = user.getTasks().stream()
+                    .collect(Collectors.groupingBy(Task::getStatus, Collectors.counting()));
 
             ReminderMessage reminderMessage = new ReminderMessage(user.getUsername(), user.getEmail(), tasksByStatus);
 

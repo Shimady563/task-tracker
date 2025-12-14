@@ -4,25 +4,40 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <changeSet id="2024-08-20-create-table-user" author="Shimady">
-        <createSequence sequenceName="tracker_user_id_seq"/>
 
         <createTable tableName="tracker_user">
             <column name="id" type="bigserial" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+
             <column name="username" type="varchar">
                 <constraints nullable="false"/>
             </column>
+
             <column name="password" type="varchar">
                 <constraints nullable="false"/>
             </column>
+
             <column name="email" type="varchar">
                 <constraints nullable="false" unique="true"/>
             </column>
+
             <column name="phone_number" type="varchar">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+    </changeSet>
+
+    <changeSet id="2024-08-20-populate-user-table" author="Shimady">
+        <sql>
+            INSERT INTO tracker_user (username, password, email, phone_number) VALUES
+            ('alice', 'pass123', 'alice@example.com', '+1234567890'),
+            ('bob', 'qwerty', 'bob@example.com', '+1234567891'),
+            ('carol', 'abc123', 'carol@example.com', '+1234567892'),
+            ('dave', 'password', 'dave@example.com', '+1234567893'),
+            ('eve', 'evepass', 'eve@example.com', '+1234567894');
+        </sql>
     </changeSet>
 
 </databaseChangeLog>

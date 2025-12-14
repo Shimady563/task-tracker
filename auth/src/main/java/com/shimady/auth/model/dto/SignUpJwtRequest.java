@@ -1,10 +1,10 @@
 package com.shimady.auth.model.dto;
 
 import com.shimady.auth.validation.Password;
+import com.shimady.auth.validation.PhoneNumber;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,13 +14,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "Sign up request payload to create a new user and receive JWT tokens")
 public class SignUpJwtRequest {
-    @NotBlank(message = "first name cannot be blank")
-    @Schema(description = "User first name", example = "John")
-    private String firstName;
+    @NotBlank(message = "username cannot be blank")
+    @Schema(description = "Username", example = "John")
+    private String username;
 
-    @NotBlank(message = "last name cannot be blank")
-    @Schema(description = "User last name", example = "Doe")
-    private String lastName;
+    @PhoneNumber(message = "phone number should start with " +
+            "+7 or 8 and then contain 10 digits")
+    @Schema(example = "+76969696969")
+    private String phoneNumber;
 
     @Email(regexp = "^[a-zA-Z0-9_!#$%&’*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$",
             message = "wrong format of email")
@@ -34,8 +35,4 @@ public class SignUpJwtRequest {
             "symbol from @#$%^&+=!?*")
     @Schema(description = "User password", example = "P@ssw0rd!")
     private String password;
-
-    @NotNull(message = "group id cannot be null")
-    @Schema(description = "Target group id for the user", example = "1")
-    private Long groupId;
 }

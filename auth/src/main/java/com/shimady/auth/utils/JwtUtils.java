@@ -1,7 +1,7 @@
 package com.shimady.auth.utils;
 
 import com.shimady.auth.model.JwtAuthentication;
-import com.shimady.auth.model.Role;
+import com.shimady.auth.model.UserRole;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.Cookie;
 import lombok.experimental.UtilityClass;
@@ -14,7 +14,7 @@ public class JwtUtils {
     public static JwtAuthentication generateAuthentication(Claims claims) {
         JwtAuthentication auth = new JwtAuthentication();
         auth.setEmail(claims.getSubject());
-        auth.setRole(Role.valueOf(claims.get("role", String.class)));
+        auth.setRole(UserRole.valueOf(claims.get("role", String.class)));
         return auth;
     }
 

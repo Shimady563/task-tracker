@@ -11,5 +11,5 @@ import java.util.Map;
 public class ReminderMessage {
     private final String username;
     private final String email;
-    private final Map<TaskStatus, Integer> tasksByStatus;
+    private final Map<TaskStatus, Long> tasksByStatus;
 }

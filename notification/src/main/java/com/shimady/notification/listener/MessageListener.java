@@ -24,7 +24,7 @@ public class MessageListener {
     private final SMSService smsService;
     private final PushService pushService;
 
-    @KafkaListener(topics = "emailTopic", groupId = "notification")
+    @KafkaListener(topics = "${kafka.topics.email.name}", groupId = "notification")
     public void listenEmailMessage(@Payload @Valid EmailMessage message, ConsumerRecordMetadata metadata) {
         log.info("Received email message from partition {}, email: {}",
                 metadata.partition(),
@@ -33,7 +33,7 @@ public class MessageListener {
         emailService.sendEmail(message);
     }
 
-    @KafkaListener(topics = "smsTopic", groupId = "notification")
+    @KafkaListener(topics = "${kafka.topics.sms.name}")
     public void listenSMSMessage(@Payload @Valid SMSMessage message, ConsumerRecordMetadata metadata) {
         log.info("Received sms message from partition {}, username: {}",
                 metadata.partition(),
@@ -42,7 +42,7 @@ public class MessageListener {
         smsService.sendSMS(message);
     }
 
-    @KafkaListener(topics = "pushTopic", groupId = "notification")
+    @KafkaListener(topics = "${kafka.topics.push.name}")
     public void onPushMessage(@Payload @Valid PushMessage message, ConsumerRecordMetadata metadata) {
         log.info("Received push message from partition {}, username {}",
                 metadata.partition(),
@@ -51,7 +51,8 @@ public class MessageListener {
         pushService.sendPush(message);
     }
 
-    @KafkaListener(topics = "reminderTopic", groupId = "notification")
+    @KafkaListener(topics = "${kafka.topics.reminder.name}")
+
     public void onReminderMessage(@Payload @Valid ReminderMessage message, ConsumerRecordMetadata metadata) {
         log.info("Received reminder message from partition {}, username {}",
                 metadata.partition(),

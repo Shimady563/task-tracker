@@ -13,7 +13,7 @@ import java.util.List;
 public class JwtAuthentication implements Authentication {
     private boolean authenticated;
     private String email;
-    private Role role;
+    private UserRole role;
 
     @Override
     public String getName() {

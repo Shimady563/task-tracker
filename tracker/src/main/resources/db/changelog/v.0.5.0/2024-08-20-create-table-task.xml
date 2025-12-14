@@ -4,33 +4,39 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
 
     <changeSet id="2024-08-20-create-table-task" author="Shimady">
-        <createSequence sequenceName="task_id_seq"/>
 
         <createTable tableName="task">
             <column name="id" type="bigserial" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
+
             <column name="user_id" type="bigint">
                 <constraints foreignKeyName="task_tracker_user_fkey"
                              references="tracker_user(id)"
                              nullable="false"/>
             </column>
+
             <column name="title" type="varchar">
                 <constraints nullable="false"/>
             </column>
+
             <column name="description" type="varchar">
                 <constraints nullable="false"/>
             </column>
+
             <column name="status" type="varchar">
                 <constraints nullable="false"/>
             </column>
+
             <column name="created_at" type="timestamp">
                 <constraints nullable="false"/>
             </column>
+
             <column name="deadline" type="timestamp">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
     </changeSet>
     
     <changeSet id="2024-08-20-add-status-check-constraint" author="Shimady">
@@ -38,6 +44,17 @@
             alter table task
             add constraint task_status_check
             check (status in ('TODO', 'DEFERRED', 'DONE'));
+        </sql>
+    </changeSet>
+
+    <changeSet id="2024-08-20-populate-task-table" author="Shimady">
+        <sql>
+            INSERT INTO task (user_id, title, description, status, created_at, deadline) VALUES
+            (1, 'Task 1', 'Description for task 1', 'TODO', NOW(), NOW() + INTERVAL '2 days'),
+            (2, 'Task 2', 'Description for task 2', 'DEFERRED', NOW(), NOW() + INTERVAL '3 days'),
+            (3, 'Task 3', 'Description for task 3', 'DONE', NOW(), NOW() + INTERVAL '1 day'),
+            (4, 'Task 4', 'Description for task 4', 'TODO', NOW(), NOW() + INTERVAL '5 days'),
+            (5, 'Task 5', 'Description for task 5', 'DEFERRED', NOW(), NOW() + INTERVAL '4 days');
         </sql>
     </changeSet>
 

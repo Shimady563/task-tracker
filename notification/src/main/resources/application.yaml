@@ -2,9 +2,11 @@ spring:
   application:
     name: notification
   kafka:
-    bootstrap-servers: kafka:29093
     consumer:
-      group-id: notification
+      client-id: ${spring.application.name}
+      group-id: ${spring.application.name}-submission
+      auto-offset-reset: earliest
+      enable-auto-commit: false
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
@@ -25,6 +27,26 @@ spring:
           starttls:
             enable: true
             required: true
+
+kafka:
+  topics:
+    email:
+      name: emailTopic
+      replication-factor: 1
+      partitions: 1
+    sms:
+      name: smsTopic
+      replication-factor: 1
+      partitions: 1
+    push:
+      name: pushTopic
+      replication-factor: 1
+      partitions: 1
+    reminder:
+      name: reminderTopic
+      replication-factor: 1
+      partitions: 1
+
 logging:
   level:
     root: info

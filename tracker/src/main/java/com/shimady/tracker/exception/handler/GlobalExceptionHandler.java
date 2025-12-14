@@ -10,8 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import java.time.LocalDateTime;
-
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -22,8 +20,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 new AppError(
                         e.getMessage(),
-                        HttpStatus.FORBIDDEN.value(),
-                        LocalDateTime.now()
+                        HttpStatus.FORBIDDEN.value()
                 ),
                 HttpStatus.FORBIDDEN
         );
@@ -35,8 +32,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 new AppError(
                         e.getMessage(),
-                        HttpStatus.NOT_FOUND.value(),
-                        LocalDateTime.now()
+                        HttpStatus.NOT_FOUND.value()
                 ),
                 HttpStatus.NOT_FOUND
         );
@@ -48,8 +44,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(
                 new AppError(
                         buildDataExceptionMessage(e.getMostSpecificCause().getMessage()),
-                        HttpStatus.CONFLICT.value(),
-                        LocalDateTime.now()
+                        HttpStatus.CONFLICT.value()
                 ),
                 HttpStatus.CONFLICT
         );

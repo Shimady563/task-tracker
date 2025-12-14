@@ -3,13 +3,20 @@ services:
     container_name: tracker
     build:
       context: ./tracker
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8080:8080"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/${POSTGRES_DB}
-      - SPRING_DATASOURCE_PASSWORD=${POSTGRES_PASSWORD}
-      - SPRING_DATASOURCE_USERNAME=${POSTGRES_USER}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/tracker
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_PROFILES_ACTIVE=local
+    healthcheck:
+      test: [ 'CMD', 'wget', '--spider', '-q', 'http://localhost:8080/api/v1/actuator/health' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       postgres:
         condition: service_healthy
@@ -21,7 +28,7 @@ services:
     container_name: notification
     build:
       context: ./notification
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     ports:
       - "8040:8080"
     environment:
@@ -29,64 +36,108 @@ services:
       - SPRING_MAIL_PASSWORD=${MAIL_PASSWORD}
       - SPRING_MAIL_HOST=${MAIL_HOST}
       - SPRING_MAIL_PORT=${MAIL_PORT}
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_PROFILES_ACTIVE=local
     depends_on:
       tracker:
-        condition: service_started
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+
+  auth:
+    container_name: auth
+    build:
+      context: ./auth
+      dockerfile: Dockerfile
+    ports:
+      - '8081:8080'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/tracker
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_PASSWORD=redis
+      - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
+      - SPRING_PROFILES_ACTIVE=local
+    depends_on:
+      tracker:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
   postgres:
     container_name: postgres
-    image: postgres:alpine
+    image: postgres:17-alpine
     restart: always
-    user: ${POSTGRES_USER}
+    user: postgres
     volumes:
       - postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=${POSTGRES_DB}
-      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=tracker
+      - POSTGRES_PASSWORD=postgres
     expose:
       - 5432
     healthcheck:
-      test: [ "CMD", "pg_isready" ]
+      test: [ 'CMD', 'pg_isready' ]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  zookeeper:
-    container_name: zookeeper
-    image: confluentinc/cp-zookeeper:latest
+  redis:
+    container_name: redis
+    image: redis:8-alpine
+    command:
+      [
+        'redis-server',
+        '--save',
+        '',
+        '--appendonly',
+        'no',
+        '--requirepass',
+        'redis',
+      ]
+    restart: always
+    volumes:
+      - redis-data:/data
     expose:
-      - 22181
-    environment:
-      - ZOOKEEPER_CLIENT_PORT=22181
+      - 6379
+    healthcheck:
+      test: [ 'CMD', 'redis-cli', 'ping' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kafka:
     container_name: kafka
-    image: confluentinc/cp-kafka:latest
-    expose:
-      - 29093
-    environment:
-      - KAFKA_BROKER_ID=1
-      - KAFKA_ZOOKEEPER_CONNECT=zookeeper:22181
-      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka:29093
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT
-      - KAFKA_INTER_BROKER_LISTENER_NAME=PLAINTEXT
-      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
-    depends_on:
-      - zookeeper
-
-  kafka-ui:
-    image: provectuslabs/kafka-ui
-    container_name: kafka-ui
-    ports:
-      - "8090:8080"
+    image: confluentinc/cp-kafka:8.1.0
     restart: always
+    expose:
+      - 9092
+      - 9093
     environment:
-      - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:29093
-      - KAFKA_CLUSTERS_0_ZOOKEEPER=zookeeper:22181
-    depends_on:
-      - kafka
-      - zookeeper
+      KAFKA_KRAFT_MODE: "true"
+      KAFKA_PROCESS_ROLES: controller,broker
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@kafka:9093"
+      KAFKA_LISTENERS: PLAINTEXT://kafka:9092,CONTROLLER://kafka:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"
+    healthcheck:
+      test: [ "CMD-SHELL", "kafka-broker-api-versions --bootstrap-server kafka:9092 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   postgres-data:
+  redis-data:

@@ -1,4 +1,4 @@
-package com.shimady.tracker.event;
+package com.shimady.auth.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

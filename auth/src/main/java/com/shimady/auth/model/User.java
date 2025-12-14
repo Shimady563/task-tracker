@@ -12,17 +12,17 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "contest_user")
+@Table(name = "tracker_user")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
+    @Column(name = "username", nullable = false)
+    private String username;
 
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
@@ -30,17 +30,9 @@ public class User implements UserDetails {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "role", nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private Role role = Role.ROLE_STUDENT;
-
-    @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Group group;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(role);
+        return List.of(UserRole.ROLE_USER);
     }
 
     @Override

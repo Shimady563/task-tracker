@@ -14,12 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
+
     private final UserRepository userRepository;
 
     @Transactional
     public void saveUser(User user) {
         log.info("Saving user with email: {}", user.getEmail());
-        userRepository.save(user);
+        userRepository.saveAndFlush(user);
     }
 
     protected User getUserByEmail(String email) {

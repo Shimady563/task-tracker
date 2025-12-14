@@ -1,14 +1,15 @@
 package com.shimady.auth.service;
 
 import com.shimady.auth.converter.AuthConverter;
-import com.shimady.auth.model.Group;
 import com.shimady.auth.model.User;
+import com.shimady.auth.model.UserCreationEvent;
 import com.shimady.auth.model.dto.JwtResponse;
 import com.shimady.auth.model.dto.SignInJwtRequest;
 import com.shimady.auth.model.dto.SignUpJwtRequest;
 import com.shimady.auth.model.dto.UserResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +23,7 @@ public class AuthService {
     private final UserService userService;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final GroupService groupService;
+    private final ApplicationEventPublisher eventPublisher;
 
     @Transactional(readOnly = true)
     public UserResponse getCurrentUser() {
@@ -35,9 +36,8 @@ public class AuthService {
         log.info("Signing up user with email: {}", request.getEmail());
         User user = AuthConverter.signUpRequest2Domain(request);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        Group group = groupService.getGroupById(request.getGroupId());
-        group.addUser(user);
         userService.saveUser(user);
+        eventPublisher.publishEvent(new UserCreationEvent(user.getId()));
         return jwtService.generateTokens(user);
     }
 

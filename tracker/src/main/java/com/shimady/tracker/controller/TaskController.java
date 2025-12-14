@@ -11,15 +11,17 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Tag(name = "Task Controller", description = "Controller for manipulating user tasks")
-@SecurityRequirement(name = "SessionAuth")
+@SecurityRequirement(name = "JWT")
+@Secured("ROLE_USER")
 public class TaskController {
 
     private final TaskService taskService;
@@ -43,7 +45,7 @@ public class TaskController {
 
     @GetMapping("")
     @Operation(summary = "Obtaining all tasks for current user")
-    public Slice<TaskResponse> getAllTasksForCurrentUser(
+    public Page<TaskResponse> getAllTasksForCurrentUser(
             @RequestParam(defaultValue = "10")
             @Parameter(description = "Number of tasks per page")
             int limit,
