@@ -1,0 +1,24 @@
+# Service для PostgreSQL
+# ClusterIP - доступен только внутри кластера
+# Используется микросервисами для подключения к БД
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: backend
+  labels:
+    app: postgres
+    component: database
+spec:
+  type: ClusterIP
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+      protocol: TCP
+  selector:
+    app: postgres
+    component: database
+
+

@@ -1,0 +1,137 @@
+# Deployment для auth сервиса
+# Stateless микросервис для аутентификации и авторизации
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: auth
+  namespace: backend
+  labels:
+    app: auth
+    component: microservice
+    version: v1
+spec:
+  replicas: 2  # Начальное количество реплик, HPA будет управлять масштабированием
+  selector:
+    matchLabels:
+      app: auth
+      component: microservice
+  template:
+    metadata:
+      labels:
+        app: auth
+        component: microservice
+        version: v1
+    spec:
+      containers:
+        - name: auth
+          # ВАЖНО: Замените на ваш образ Docker
+          image: your-registry/auth:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          
+          # Переменные окружения из ConfigMap
+          envFrom:
+            - configMapRef:
+                name: auth-config
+          
+          # Переменные окружения из Secret
+          env:
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: db-username
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: db-password
+            - name: SPRING_DATA_REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: redis-password
+            - name: JWT_TOKEN_ACCESS_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: jwt-access-secret
+            - name: JWT_TOKEN_REFRESH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: jwt-refresh-secret
+            - name: JWT_TOKEN_ACCESS_COOKIE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: jwt-access-cookie-name
+            - name: JWT_TOKEN_REFRESH_COOKIE_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: jwt-refresh-cookie-name
+            - name: JWT_TOKEN_ACCESS_EXPIRATION
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: jwt-access-expiration
+            - name: JWT_TOKEN_REFRESH_EXPIRATION
+              valueFrom:
+                secretKeyRef:
+                  name: auth-secret
+                  key: jwt-refresh-expiration
+          
+          # Health checks
+          # ВАЖНО: Убедитесь, что в Spring Boot включены отдельные liveness/readiness endpoints
+          # Для этого добавьте в application.yaml:
+          # management:
+          #   endpoint:
+          #     health:
+          #       probes:
+          #         enabled: true
+          #   endpoints:
+          #     web:
+          #       exposure:
+          #         include: health,info
+          livenessProbe:
+            httpGet:
+              path: /api/v1/auth/actuator/health/liveness
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /api/v1/auth/actuator/health/readiness
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+            successThreshold: 1
+          
+          # Ресурсы для контейнера
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
+          
+          # Настройки безопасности
+          securityContext:
+            allowPrivilegeEscalation: false
+            runAsNonRoot: true
+            runAsUser: 1000
+            capabilities:
+              drop:
+                - ALL
+

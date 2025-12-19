@@ -1,0 +1,24 @@
+# Service для notification сервиса
+# ClusterIP - доступен только внутри кластера
+# Обычно не требуется для внешнего доступа, используется только для health checks
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification
+  namespace: backend
+  labels:
+    app: notification
+    component: microservice
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 80
+      targetPort: http
+      protocol: TCP
+  selector:
+    app: notification
+    component: microservice
+
+

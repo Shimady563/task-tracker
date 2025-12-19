@@ -1,0 +1,132 @@
+# Kafka Cluster используя Strimzi Operator
+# ВАЖНО: Перед применением убедитесь, что Strimzi Operator установлен в кластере
+# Инструкции по установке: https://strimzi.io/docs/operators/latest/deploying.html
+#
+# Для установки Strimzi Operator:
+# kubectl create namespace kafka
+# kubectl apply -f 'https://strimzi.io/install/latest?namespace=kafka' -n kafka
+
+apiVersion: kafka.strimzi.io/v1beta2
+kind: Kafka
+metadata:
+  name: kafka-cluster
+  namespace: backend
+  labels:
+    app: kafka
+    component: messaging
+spec:
+  # Конфигурация Kafka cluster
+  kafka:
+    version: 3.6.1
+    replicas: 3  # 3 брокера для высокой доступности
+    listeners:
+      # Internal listener для доступа внутри кластера
+      - name: plain
+        port: 9092
+        type: internal
+        tls: false
+        configuration:
+          brokers:
+            - broker: 0
+              advertisedHost: kafka-0.kafka-cluster-kafka-brokers.backend.svc
+            - broker: 1
+              advertisedHost: kafka-1.kafka-cluster-kafka-brokers.backend.svc
+            - broker: 2
+              advertisedHost: kafka-2.kafka-cluster-kafka-brokers.backend.svc
+    config:
+      # Настройки для продакшн окружения
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      default.replication.factor: 3
+      min.insync.replicas: 2
+      num.partitions: 3
+      # Настройки логов для лучшей производительности
+      log.retention.hours: 168  # 7 дней
+      log.segment.bytes: 1073741824  # 1GB
+      log.retention.check.interval.ms: 300000
+    # Хранилище для данных Kafka
+    storage:
+      type: persistent-claim
+      size: 100Gi
+      deleteClaim: false
+      class: ""  # Использует default StorageClass
+    # Ресурсы для Kafka брокеров
+    resources:
+      requests:
+        memory: 2Gi
+        cpu: 1000m
+      limits:
+        memory: 4Gi
+        cpu: 2000m
+    # Health checks
+    livenessProbe:
+      initialDelaySeconds: 30
+      timeoutSeconds: 10
+      periodSeconds: 30
+      failureThreshold: 3
+      successThreshold: 1
+    readinessProbe:
+      initialDelaySeconds: 30
+      timeoutSeconds: 10
+      periodSeconds: 30
+      failureThreshold: 3
+      successThreshold: 1
+    # JVM настройки
+    jvmOptions:
+      -Xms: 2048m
+      -Xmx: 2048m
+      -XX: +UseG1GC
+      -XX:MaxGCPauseMillis: 20
+      -XX:InitiatingHeapOccupancyPercent: 35
+      -XX: +ExplicitGCInvokesConcurrent
+      -XX:MaxInlineLevel: 15
+      -XX: +DumpArenaStatsOnOutOfMemoryError
+
+  # Zookeeper для управления метаданными Kafka
+  zookeeper:
+    replicas: 3  # 3 реплики для высокой доступности
+    storage:
+      type: persistent-claim
+      size: 20Gi
+      deleteClaim: false
+      class: ""
+    # Ресурсы для Zookeeper
+    resources:
+      requests:
+        memory: 512Mi
+        cpu: 250m
+      limits:
+        memory: 1Gi
+        cpu: 500m
+    # Health checks
+    livenessProbe:
+      initialDelaySeconds: 30
+      timeoutSeconds: 10
+      periodSeconds: 30
+      failureThreshold: 3
+      successThreshold: 1
+    readinessProbe:
+      initialDelaySeconds: 30
+      timeoutSeconds: 10
+      periodSeconds: 30
+      failureThreshold: 3
+      successThreshold: 1
+    # JVM настройки
+    jvmOptions:
+      -Xms: 512m
+      -Xmx: 512m
+
+  # Entity Operator для управления топиками и пользователями
+  entityOperator:
+    topicOperator: {}
+    userOperator: {}
+    resources:
+      requests:
+        memory: 256Mi
+        cpu: 100m
+      limits:
+        memory: 512Mi
+        cpu: 200m
+
+
