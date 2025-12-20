@@ -4,9 +4,7 @@ import com.shimady.notification.model.EmailMessage;
 import com.shimady.notification.model.PushMessage;
 import com.shimady.notification.model.ReminderMessage;
 import com.shimady.notification.model.SMSMessage;
-import com.shimady.notification.service.EmailService;
-import com.shimady.notification.service.PushService;
-import com.shimady.notification.service.SMSService;
+import com.shimady.notification.service.SenderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,17 +18,18 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class MessageListener {
 
-    private final EmailService emailService;
-    private final SMSService smsService;
-    private final PushService pushService;
+    private final SenderService<EmailMessage> emailService;
+    private final SenderService<ReminderMessage> reminderService;
+    private final SenderService<SMSMessage> smsService;
+    private final SenderService<PushMessage> pushService;
 
-    @KafkaListener(topics = "${kafka.topics.email.name}", groupId = "notification")
+    @KafkaListener(topics = "${kafka.topics.email.name}")
     public void listenEmailMessage(@Payload @Valid EmailMessage message, ConsumerRecordMetadata metadata) {
         log.info("Received email message from partition {}, email: {}",
                 metadata.partition(),
                 message.getEmail());
 
-        emailService.sendEmail(message);
+        emailService.send(message);
     }
 
     @KafkaListener(topics = "${kafka.topics.sms.name}")
@@ -39,7 +38,7 @@ public class MessageListener {
                 metadata.partition(),
                 message.getUsername());
 
-        smsService.sendSMS(message);
+        smsService.send(message);
     }
 
     @KafkaListener(topics = "${kafka.topics.push.name}")
@@ -48,16 +47,15 @@ public class MessageListener {
                 metadata.partition(),
                 message.getUsername());
 
-        pushService.sendPush(message);
+        pushService.send(message);
     }
 
     @KafkaListener(topics = "${kafka.topics.reminder.name}")
-
     public void onReminderMessage(@Payload @Valid ReminderMessage message, ConsumerRecordMetadata metadata) {
         log.info("Received reminder message from partition {}, username {}",
                 metadata.partition(),
                 message.getUsername());
 
-        emailService.sendReminderEmail(message);
+        reminderService.send(message);
     }
 }

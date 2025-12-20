@@ -1,13 +1,16 @@
-package com.shimady.notification.service;
+package com.shimady.notification.service.impl;
 
 import com.shimady.notification.model.SMSMessage;
+import com.shimady.notification.service.SenderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-public class SMSService {
-    public void sendSMS(SMSMessage message) {
+public class SMSService implements SenderService<SMSMessage> {
+
+    @Override
+    public void send(SMSMessage message) {
         log.info("Sending sms message to: {}", message.getPhoneNumber());
 
         // there should be the sms message sending,
