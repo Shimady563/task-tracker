@@ -1,4 +1,4 @@
-FROM bellsoft/liberica-runtime-container:jre-21-cds-slim-glibc as builder
+FROM bellsoft/liberica-runtime-container:jre-21-cds-slim-glibc AS builder
 WORKDIR /builder
 ARG JAR_FILE=/build/libs/tracker-*.jar
 COPY ${JAR_FILE} application.jar

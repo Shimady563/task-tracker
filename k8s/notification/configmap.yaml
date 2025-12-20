@@ -1,38 +1,19 @@
-# ConfigMap для notification сервиса
-# Содержит не-секретные конфигурационные параметры
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: notification-config
-  namespace: backend
+  namespace: tracker
   labels:
     app: notification
     component: microservice
 data:
-  # Spring Boot конфигурация
-  SPRING_APPLICATION_NAME: "notification"
   SPRING_PROFILES_ACTIVE: "prod"
   
-  # Kafka конфигурация (consumer)
-  SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka-cluster-kafka-bootstrap:9092"
-  SPRING_KAFKA_CONSUMER_CLIENT_ID: "notification"
-  SPRING_KAFKA_CONSUMER_GROUP_ID: "notification-submission"
-  SPRING_KAFKA_CONSUMER_AUTO_OFFSET_RESET: "earliest"
-  SPRING_KAFKA_CONSUMER_ENABLE_AUTO_COMMIT: "false"
-  SPRING_KAFKA_CONSUMER_KEY_DESERIALIZER: "org.apache.kafka.common.serialization.StringDeserializer"
-  SPRING_KAFKA_CONSUMER_VALUE_DESERIALIZER: "org.springframework.kafka.support.serializer.JsonDeserializer"
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+
+  SERVER_SERVLET_CONTEXT_PATH: "/api/v1/notification"
+  SERVER_PORT: "8040"
   
-  # Kafka JSON deserializer конфигурация
-  SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_TRUSTED_PACKAGES: "com.shimady.tracker.model.messaging"
-  SPRING_KAFKA_CONSUMER_PROPERTIES_SPRING_JSON_TYPE_MAPPING: "com.shimady.tracker.model.messaging.EmailMessage:com.shimady.notification.model.EmailMessage,com.shimady.tracker.model.messaging.PushMessage:com.shimady.notification.model.PushMessage,com.shimady.tracker.model.messaging.ReminderMessage:com.shimady.notification.model.ReminderMessage,com.shimady.tracker.model.messaging.SMSMessage:com.shimady.notification.model.SMSMessage"
-  
-  # Mail конфигурация (SMTP настройки)
-  SPRING_MAIL_PROPERTIES_MAIL_SMTP_AUTH: "true"
-  SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_ENABLE: "true"
-  SPRING_MAIL_PROPERTIES_MAIL_SMTP_STARTTLS_REQUIRED: "true"
-  
-  # Kafka Topics
   KAFKA_TOPICS_EMAIL_NAME: "email-topic"
   KAFKA_TOPICS_SMS_NAME: "sms-topic"
   KAFKA_TOPICS_PUSH_NAME: "push-topic"

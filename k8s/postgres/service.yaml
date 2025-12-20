@@ -1,12 +1,8 @@
-# Service для PostgreSQL
-# ClusterIP - доступен только внутри кластера
-# Используется микросервисами для подключения к БД
-
 apiVersion: v1
 kind: Service
 metadata:
   name: postgres
-  namespace: backend
+  namespace: tracker
   labels:
     app: postgres
     component: database

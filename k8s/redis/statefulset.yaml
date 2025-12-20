@@ -1,15 +1,13 @@
-# Deployment для Redis
-# Stateless сервис кэширования, используемый auth сервисом
-
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: redis
-  namespace: backend
+  namespace: tracker
   labels:
     app: redis
     component: cache
 spec:
+  serviceName: postgres
   replicas: 1
   selector:
     matchLabels:
@@ -29,7 +27,6 @@ spec:
             - name: redis
               containerPort: 6379
               protocol: TCP
-          # Команда запуска Redis с паролем
           command:
             - redis-server
             - --requirepass
@@ -38,13 +35,9 @@ spec:
             - ""
             - --appendonly
             - "no"
-          env:
-            - name: REDIS_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: redis-secret
-                  key: password
-          # Health checks
+          envFrom:
+            - secretRef:
+                name: redis-secret
           livenessProbe:
             exec:
               command:
@@ -54,8 +47,6 @@ spec:
                 - ping
             initialDelaySeconds: 30
             periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 3
           readinessProbe:
             exec:
               command:
@@ -63,17 +54,9 @@ spec:
                 - -a
                 - $(REDIS_PASSWORD)
                 - ping
-            initialDelaySeconds: 5
-            periodSeconds: 5
-            timeoutSeconds: 3
-            failureThreshold: 3
-          # Ресурсы для контейнера
+            initialDelaySeconds: 30
+            periodSeconds: 10
           resources:
             requests:
               memory: "128Mi"
               cpu: "100m"
-            limits:
-              memory: "256Mi"
-              cpu: "200m"
-
-

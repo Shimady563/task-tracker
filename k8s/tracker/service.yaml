@@ -1,12 +1,8 @@
-# Service для tracker сервиса
-# ClusterIP - доступен только внутри кластера
-# Основной API gateway сервис
-
 apiVersion: v1
 kind: Service
 metadata:
   name: tracker
-  namespace: backend
+  namespace: tracker
   labels:
     app: tracker
     component: microservice
@@ -14,7 +10,7 @@ spec:
   type: ClusterIP
   ports:
     - name: http
-      port: 80
+      port: 8080
       targetPort: http
       protocol: TCP
   selector:

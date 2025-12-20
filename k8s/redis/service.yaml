@@ -1,12 +1,8 @@
-# Service для Redis
-# ClusterIP - доступен только внутри кластера
-# Используется auth сервисом для кэширования и сессий
-
 apiVersion: v1
 kind: Service
 metadata:
   name: redis
-  namespace: backend
+  namespace: tracker
   labels:
     app: redis
     component: cache

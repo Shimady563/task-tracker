@@ -1,48 +1,23 @@
-# ConfigMap для tracker сервиса
-# Содержит не-секретные конфигурационные параметры
-
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: tracker-config
-  namespace: backend
+  namespace: tracker
   labels:
     app: tracker
     component: microservice
 data:
-  # Spring Boot конфигурация
-  SPRING_APPLICATION_NAME: "tracker"
   SPRING_PROFILES_ACTIVE: "prod"
-  
-  # Database конфигурация
+
   SPRING_DATASOURCE_URL: "jdbc:postgresql://postgres:5432/tracker"
-  SPRING_DATASOURCE_DRIVER_CLASS_NAME: "org.postgresql.Driver"
-  
-  # Liquibase конфигурация
-  SPRING_LIQUIBASE_CHANGE_LOG: "classpath:/db/changelog/db-changelog-master.xml"
-  
-  # Kafka конфигурация
-  SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka-cluster-kafka-bootstrap:9092"
-  SPRING_KAFKA_PRODUCER_CLIENT_ID: "tracker"
-  SPRING_KAFKA_PRODUCER_ENABLE_IDEMPOTENCE: "true"
-  SPRING_KAFKA_PRODUCER_ACKS: "all"
-  SPRING_KAFKA_PRODUCER_LINGER_MS: "100"
-  SPRING_KAFKA_PRODUCER_RETRY_BACKOFF_MS: "1000"
-  SPRING_KAFKA_PRODUCER_DELIVERY_TIMEOUT_MS: "30000"
-  SPRING_KAFKA_PRODUCER_KEY_SERIALIZER: "org.apache.kafka.common.serialization.StringSerializer"
-  SPRING_KAFKA_PRODUCER_VALUE_SERIALIZER: "org.springframework.kafka.support.serializer.JsonSerializer"
-  
-  # Kafka Topics
-  KAFKA_TOPICS_REMINDER_NAME: "reminder-topic"
-  
-  # Server конфигурация
+
+  SPRING_KAFKA_BOOTSTRAP_SERVERS: "kafka:9092"
+
   SERVER_SERVLET_CONTEXT_PATH: "/api/v1"
-  
-  # Auth whitelist
+
   AUTH_WHITELIST: "/swagger-ui.html,/v3/api-docs/**,/swagger-ui/**,/actuator,/actuator/**"
-  AUTH_ALLOWED_ORIGINS: "*"  # В production укажите конкретные домены
-  
-  # Scheduling конфигурация
+  AUTH_ALLOWED_ORIGINS: "*"
+
   SCHEDULING_MESSAGING_CRON: "0 0 0 * * *"
 
 
