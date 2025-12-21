@@ -7,12 +7,13 @@ metadata:
     app: notification
     component: microservice
 spec:
-  type: ClusterIP
+  type: NodePort
   ports:
     - name: http
       port: 8040
       targetPort: 8040
       protocol: TCP
+      nodePort: 30040
   selector:
     app: notification
     component: microservice

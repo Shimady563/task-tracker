@@ -24,6 +24,6 @@ data:
   SERVER_PORT: "8081"
 
   AUTH_WHITELIST: "/signup,/login,/refresh,/logout,/swagger-ui.html,/v3/api-docs/**,/swagger-ui/**,/actuator,/actuator/**"
-  AUTH_ALLOWED_ORIGINS: "*"
+  AUTH_ALLOWED_ORIGINS: "http://192.168.49.2:30173"
 
 

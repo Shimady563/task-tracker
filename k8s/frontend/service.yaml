@@ -13,7 +13,7 @@ spec:
       port: 5173
       targetPort: 5173
       protocol: TCP
-      nodePort: 32173
+      nodePort: 30173
   selector:
     app: frontend
     component: microservice

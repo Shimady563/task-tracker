@@ -16,7 +16,7 @@ data:
   SERVER_SERVLET_CONTEXT_PATH: "/api/v1"
 
   AUTH_WHITELIST: "/swagger-ui.html,/v3/api-docs/**,/swagger-ui/**,/actuator,/actuator/**"
-  AUTH_ALLOWED_ORIGINS: "*"
+  AUTH_ALLOWED_ORIGINS: "http://192.168.49.2:30173"
 
   SCHEDULING_MESSAGING_CRON: "0 0 0 * * *"
 

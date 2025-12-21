@@ -40,7 +40,7 @@ public class JwtUtils {
     private static ResponseCookie createCookie(String tokenName, String tokenValue, Long maxAgeMs) {
         return ResponseCookie.from(tokenName, tokenValue)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .maxAge(maxAgeMs / 1000L)
                 .path("/api/v1")
                 .build();
