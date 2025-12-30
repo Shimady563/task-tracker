@@ -24,6 +24,13 @@ public class AuthConverter {
         @Mapping(target = "authorities", ignore = true)
         User signUpRequest2Domain(SignUpJwtRequest signUpJwtRequest);
 
-        UserResponse domain2Response(User user);
+        default UserResponse domain2Response(User user) {
+            return new UserResponse(
+                    user.getId(),
+                    user.getRealUsername(),
+                    user.getPhoneNumber(),
+                    user.getEmail()
+            );
+        }
     }
 }

@@ -86,6 +86,7 @@ body {
 .logo {
   margin: 0;
   font-size: 20px;
+  color: white;
 }
 
 /* ===== Nav ===== */

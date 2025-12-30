@@ -68,3 +68,5 @@ kafka:
 logging:
   level:
     root: info
+    org.springframework.mail: DEBUG
+    com.sun.mail: DEBUG

@@ -43,7 +43,7 @@ check_status "Redis развернут"
 
 # Kafka
 echo ""
-echo "3. Деплой Kafka..."
+echo "4. Деплой Kafka..."
 kubectl apply -f kafka/secret.yaml
 kubectl apply -f kafka/service.yaml
 kubectl apply -f kafka/statefulset.yaml
@@ -85,7 +85,7 @@ check_status "Notification сервис развернут"
 
 # Frontend
 echo ""
-echo "8. Деплой frontend..."
+echo "9. Деплой frontend..."
 kubectl apply -f frontend/configmap.yaml
 kubectl apply -f frontend/service.yaml
 kubectl apply -f frontend/deployment.yaml

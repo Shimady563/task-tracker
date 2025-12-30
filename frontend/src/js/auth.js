@@ -26,6 +26,7 @@ export async function getUserInfo() {
       credentials: "include",
     });
 
+    console.log(data)
     return {
       id: data.id,
       username: data.username,

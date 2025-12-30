@@ -42,3 +42,11 @@ export default {
   }
 };
 </script>
+
+<style>
+h2 {
+  font-size: 2em;
+  line-height: 1.1;
+  color: black;
+}
+</style>

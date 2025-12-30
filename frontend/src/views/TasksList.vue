@@ -73,6 +73,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 24px;
+  color: black;
 }
 
 .tasks-header h1 {

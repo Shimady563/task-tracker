@@ -34,8 +34,8 @@ public class MessagingEventListener {
         log.info("Received user creation event, user id {}", event.getUserId());
         User user = userRepository.findById(event.getUserId())
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + event.getUserId() + " not found"));
-        EmailMessage emailMessage = new EmailMessage(user.getUsername(), user.getEmail());
-        SMSMessage smsMessage = new SMSMessage(user.getUsername(), user.getPhoneNumber());
+        EmailMessage emailMessage = new EmailMessage(user.getRealUsername(), user.getEmail());
+        SMSMessage smsMessage = new SMSMessage(user.getRealUsername(), user.getPhoneNumber());
 
         kafkaTemplate.send("emailTopic", emailMessage);
         kafkaTemplate.send("smsTopic", smsMessage);
@@ -50,7 +50,7 @@ public class MessagingEventListener {
                 .orElseThrow(() -> new ResourceNotFoundException("User with email " + userEmail + " not found"));
 
         long tasksToDo = taskRepository.countByUserAndStatus(user, TaskStatus.TODO);
-        PushMessage pushMessage = new PushMessage(user.getUsername(), tasksToDo);
+        PushMessage pushMessage = new PushMessage(user.getRealUsername(), tasksToDo);
 
         kafkaTemplate.send("pushTopic", pushMessage);
     }

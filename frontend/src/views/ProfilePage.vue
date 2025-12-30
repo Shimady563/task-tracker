@@ -8,7 +8,7 @@
 
         <div class="user-main">
           <h2>{{ user.username }}</h2>
-          <p class="email">{{ user.email }}</p>
+          <p class="email">{{ user.username }}</p>
         </div>
       </div>
 
@@ -68,14 +68,15 @@ export default {
 .profile-page {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  margin-top: 40px 16px;
 }
 
 /* ===== Card ===== */
 .profile-card {
   background: white;
   width: 100%;
-  max-width: 420px;
+  max-width: 480px;
+  min-width: 320px;
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 20px 40px rgba(0,0,0,0.08);
@@ -134,6 +135,7 @@ export default {
 
 .value {
   font-weight: 500;
+  color: #6b7280;
 }
 
 /* ===== Actions ===== */

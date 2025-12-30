@@ -35,6 +35,10 @@ public class User implements UserDetails {
         return List.of(UserRole.ROLE_USER);
     }
 
+    public String getRealUsername() {
+        return username;
+    }
+
     @Override
     public String getUsername() {
         return email;

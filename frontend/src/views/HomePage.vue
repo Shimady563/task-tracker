@@ -27,3 +27,9 @@ export default {
   },
 };
 </script>
+
+<style>
+h1, p {
+ color: black;
+}
+</style>

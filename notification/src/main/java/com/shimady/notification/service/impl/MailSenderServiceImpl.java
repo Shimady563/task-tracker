@@ -20,6 +20,7 @@ public class MailSenderServiceImpl implements MailSenderService {
         log.debug("Message body: {}", text);
         SimpleMailMessage mailMessage = new SimpleMailMessage();
         mailMessage.setTo(email);
+        mailMessage.setFrom(FROM_EMAIL);
         mailMessage.setSubject(subject);
         mailMessage.setText(text);
         mailSender.send(mailMessage);
